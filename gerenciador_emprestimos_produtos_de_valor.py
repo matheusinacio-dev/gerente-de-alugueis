@@ -21,23 +21,46 @@ from datetime import datetime
 
 
 '''
-Explicação do uso do json e os arquivos para persistência de dados:
+Explicação das bibliotecas json e os:
+
+    - json - formato de dado similar aos dicionários em python. Nesse caso compondo uma lista de dicionários com a estrutura: 
+        [{chave1item1: valor, chave2item1: valor,...}, {chave1item2: valor, chave2item2: valor,...},...]
+
+    - os - dá acesso as funcionalidades do sistema operacional
+
+    
 '''
 import json
 import os
 
-# Nome do arquivo onde a lista produtos fica salva no disco, fora da memória do programa.
+# Variável constante (Letras maiúsculas por convenção). Aqui manteremos o valor centralizado.
+# Recebe o nome do arquivo .json, onde a lista de produtos será salva. (fora do programa python)
+# Usaremos esse nome, guardado na variável, em alguns métodos e funções.
 
 ARQUIVO_PRODUTOS = "produtos.json"
  
-'''
-Função salvar_produtos grava a lista produtos inteira no arquivo ARQUIVO_PRODUTOS, em formato JSON.
  
-- "w" abre o arquivo em modo escrita, criando-o se não existir e sobrescrevendo se já existir.
-- encoding="utf-8" garante que acentos e caracteres especiais (ã, ç, é) sejam salvos corretamente.
+'''
+Função salvar_produtos grava a lista produtos inteira no "arquivo" ARQUIVO_PRODUTOS, em formato JSON.
+ 
+with - gerenciador de ciclo de vida - Inicia -> Executa o bloco -> Fecha
+    Dessa forma:
+        Abrir ARQUIVO_PRODUTOS, nas configurações do open() -> nomeá-lo como (as) "arquivo" -> executar o bloco de código -> fechar o arquivo
+    sem o with, o arquivo teria que ser fechado de maneira manual, usando arquivo.close()
+
+- open() - abre e retorna o arquivo nomeado como 1º parâmetro, 
+2º parâmetro -  estabelece o modo. Nesse caso "w" para "write" ou modo escrita.
+    Se o arquivo não existir, cria. Caso já exista, sobrescreve. 
+
+3º param. - o "formato textual" estabelecido pelo "encoding", "UTF-8" que interpreta acentos e carácteres especiais.
+
+
 - json.dump() converte a lista de dicionários do Python para o formato de texto JSON e escreve no arquivo.
-- ensure_ascii=False mantém os acentos legíveis no arquivo, em vez de transformá-los em códigos como \\u00e3.
-- indent=2 deixa o arquivo identado e fácil de ler caso alguém abra ele manualmente.
+    - 1º param. - receber a lista de dicionários a ser convertida
+    - 2º param - local onde será salva e como será salva  (arquivo == open(ARQUIVO_PRODUTOS, "w", encoding="utf-8") )
+    - Considerações de texto e formatação
+        - ensure_ascii=False mantém os acentos legíveis no arquivo, em vez de transformá-los em códigos como \\u00e3.
+        - indent=2 deixa o arquivo identado e fácil de ler caso alguém abra ele manualmente.
 '''
 def salvar_produtos():
     with open(ARQUIVO_PRODUTOS, "w", encoding="utf-8") as arquivo:
@@ -47,10 +70,21 @@ def salvar_produtos():
 '''
 Função carregar_produtos lê o arquivo ARQUIVO_PRODUTOS (se existir) e devolve a lista de produtos salva.
  
-- os.path.exists() verifica se o arquivo já foi criado antes; evita erro na primeira vez que o programa roda.
-- "r" abre o arquivo em modo leitura.
-- json.load() faz o caminho contrário do dump: lê o texto JSON do arquivo e devolve uma lista de dicionários do Python.
-- Se o arquivo não existir ainda, devolve uma lista vazia, como se fosse a primeira execução do programa.
+- os.path.exists() verifica se o arquivo já existe, passando o nome do arquivo como parâmetro.
+
+with - gerenciador de ciclo de vida - Inicia -> Executa o bloco -> Fecha
+    Dessa forma:
+        Abrir ARQUIVO_PRODUTOS, nas configurações do open() -> nomeá-lo como (as) "arquivo" -> executar o bloco de código -> fechar o arquivo
+    sem o with, o arquivo teria que ser fechado de maneira manual, usando arquivo.close()
+
+- open() - abre e retorna o arquivo nomeado como primeiro parâmetro, 
+    2º param. - estabelece o modo. Nesse caso "r" para "read" ou modo de leitura.
+    3º param. - o "formato textual" estabelecido pelo "encoding", "UTF-8" que interpreta acentos e carácteres especiais.
+
+
+- json.load() converte json -> python. Nesse caso, json em uma lista de dicionários.
+
+- Se o arquivo não existir ainda (condição do if == False), devolve uma lista vazia (return), como se fosse a primeira execução do programa.
 '''
 def carregar_produtos():
     if os.path.exists(ARQUIVO_PRODUTOS):
@@ -97,10 +131,7 @@ def validar_prenchimento(mensagem):
 Função cadastro de novo produto - única entrada para produtos novos
 - Novo objeto a cada vez
 - Gera:
-    -  ID - váriavel global próximo_id, que será puxada para o escopo local da função cadastro_produto(), 
-            usando "global proximo_id", para dizer que proximo_id é a variável global.
-            Por fim, incrementa à váriavel +1 a cada volta do loop, antes de preencher o dicionário. 
-            Como o valor inicial é 0, o id atribuido ao primeiro produdo é 1, e assim por diante.
+    -  ID - contagem automática, baseada no tamanho da lista produtos, que é atualizada a cada cadastro. Mais detalhes abaixo.
 - Pergunta:
     - Nome com detalhes
     - Descrição do produto
@@ -112,17 +143,15 @@ Função cadastro de novo produto - única entrada para produtos novos
 '''
 
 
- # CORREÇÃO BUG 1: antes era produtos = [], então o programa nunca recuperava o que já tinha sido salvo no arquivo. 
- # Agora carrega o conteúdo de produtos.json (ou [] se o arquivo ainda não existir).
+# lista produtos é preenchida com os dados do json salvos, caso existam. Na primeira execução do programa, com nada salvo, recebe o valor vazio [].
 produtos = carregar_produtos() 
 
-proximo_id = 0
+
 
 def cadastro_produto():
      
      while True:
           produto = {}
-          global proximo_id
           # A lista de produtos é mantida em json. 
           # Para a contagem de id dos produtos não reiniciar a cada sessão de cadastro, o id implementado sempre será o "tamanho da lista atual", que é mantido pela função carregar_produtos, + 1. 
           # Assim, quando a lista estiver vazia, o primeiro item recebe 0 + 1. Quando tiver 1 item, o segundo item recebe 1 + 1, e assim por diante.
@@ -323,7 +352,7 @@ Digite o número da ação desejada:''')
     # Em que cada número leva a uma "atividade" diferente definida em cases no match/case
     match atividade:
         case "0":
-              # Salva mais uma vez por segurança (caso algo tenha ficado pendente) e encerra o loop infinito
+              # Salva lista de dicionários em .json e encerra o loop infinito
               salvar_produtos()
               print("Dados salvos. Encerrando o programa...")
               break
@@ -349,7 +378,7 @@ Digite o número da ação desejada:''')
 
         case "5":
               '''
-              Explicação na linha 189
+              Explicação na linha 317
               - aqui o paramêtro nova_lista antes "posicionado" recebe a lista produtos_emprestados criada
               '''
               produtos_emprestados = []
@@ -358,7 +387,7 @@ Digite o número da ação desejada:''')
 
         case "6":
               '''
-              Explicação na linha 189
+              Explicação na linha 317
               - aqui o paramêtro nova_lista antes "posicionado" recebe a lista produtos_disponiveis criada
               '''
               produtos_disponiveis = []

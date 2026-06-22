@@ -36,5 +36,17 @@
     "nome_produto": "Louça de Porcelana",
     "descricao_produto": "Japonesa",
     "estado": "disponível"
+  },
+  {
+    "id": 6,
+    "nome_produto": "Laptop Dell XPS 2016",
+    "descricao_produto": "512GB 16RAM",
+    "estado": "disponível"
+  },
+  {
+    "id": 7,
+    "nome_produto": "Secadora Industrial",
+    "descricao_produto": "200°F",
+    "estado": "disponível"
   }
 ]
