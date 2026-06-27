@@ -7,7 +7,7 @@ Nossa solução oferece rastreabilidade dos aluguéis, exigindo do usuário: nom
 
 ### Prévia
 
-![Demo](assets/demo.gif)
+![Demo](assets/gerente-de-alugueis.gif)
 
 ### Como instalar e deixar pronto para uso (ou editar você mesmo)?
 
