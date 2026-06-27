@@ -9,8 +9,33 @@ Nossa solução oferece rastreabilidade dos aluguéis, exigindo do usuário: nom
 
 ![Demo](assets/demo.gif)
 
-### Como instalar e deixar pronto para uso?
-Esse campo será preenchido ou retirado.
+### Como instalar e deixar pronto para uso (ou editar você mesmo)?
+
+**Para rodar o programa**
+
+Pré-requisito: [Python 3.10 ou superior](https://www.python.org/downloads/)
+
+1. Baixe o arquivo `.py`
+2. Abra com o Python
+3. Use o menu como guia de navegação
+
+> Não esqueça de salvar seus dados usando a opção `0` do menu. O arquivo `.json` gerado precisa estar na mesma pasta que o `.py` para funcionar corretamente.
+
+---
+
+**Para editar o código**
+
+Pré-requisitos:
+- [Git](https://git-scm.com/)
+- Editor de código — recomendamos o [VS Code](https://code.visualstudio.com/download)
+
+Com o terminal aberto no VS Code, clone o repositório:
+
+```bash
+git clone https://github.com/matheusinacio-dev/gerente-de-alugueis.git
+```
+
+Faça as alterações desejadas.
 
 
 ### Principais Funcionalidades
